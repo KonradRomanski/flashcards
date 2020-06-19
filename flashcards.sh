@@ -6,10 +6,16 @@ for i in "$@"; do
     -h);&
     --help)
     echo "Welcome to help!"
-    echo "Usage: ./flashcards [OPTION]... [FILE]"
+    echo "Usage (when script in actuall directory): ./flashcards [OPTION]... [FILE]"
     echo
     echo "  -h, --help       to show this informations"
-    echo "  -s, --separator  to change default (';') separator"
+    echo "  -s, --separator  to change the separator (by default is ';')"
+    echo "  -f, --foreign    to change the learning mode  - word in the foreign language  is shown first (by default the native language is first)"
+    echo "  -s, --say        to make the word be spoken aloud"
+    echo "  -h, --hide       to hide the word"
+    echo
+    echo "Examples: "
+    echo "..."
     ;;
 
     -s);&
