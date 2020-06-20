@@ -89,9 +89,9 @@ else
   FOREIGN=($(cat ${FILES[@]} | cut -d $SEP -f1 | tr '\n' ' ' | rev | cut -c2- | rev))
   NATIVE=($(cat ${FILES[@]} | cut -d $SEP -f2 | tr '\n' ' ' | rev | cut -c2- | rev))
   # echo
-  echo ${FOREIGN[*]}
+  # echo ${FOREIGN[*]}
   # echo ${NATIVE[*]}
- echo ${#FOREIGN[@]}
+ echo ${#FOREIGN[@]} "words added"
 
   while [[ $ff < ${#FOREIGN[@]} ]] ; do
 
@@ -101,6 +101,7 @@ else
     if [[ $temp == ${FOREIGN[$ff]} ]] ; then
       SCORE=$(($SCORE + 1))
     else
+      echo "Wrong answear :( should be ${FOREIGN[$ff]}"
       FAILS=$(($FAILS + 1))
     fi
 
