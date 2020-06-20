@@ -5,10 +5,13 @@ MODE='F'
 READ='F'
 CAMO='F'
 FILES=[]
+items=0
+SHI=0
 
 for i in "$@"; do
   case $i in
     -h|--help)
+    shift
     echo "Welcome to help!"
     echo "Usage (when script in actuall directory): ./flashcards [OPTION]... [FILE]"
     echo
@@ -24,11 +27,13 @@ for i in "$@"; do
     ;;
 
     -f|--file)
+    shift
     ;;
 
-    -s|--separator)
+    -s|-s-separator)
     SEP=$2
     shift
+    SHI=1
     ;;
 
     -m|--mode)
@@ -46,11 +51,26 @@ for i in "$@"; do
     CAMO='T'
     ;;
 
+    *)
+    if [[ $SHI == 0 ]]; then
+      FILES[items]=$1
+      echo "*" $items ${FILES[items]} $i
+      shift
+      items=$(($items + 1))
+    else
+      SHI=$(($SHI - 1))
+      shift
+    fi
+    ;;
+
   esac
+  echo === -$1  $i
 done
 echo "SCRIPT TESTING:"
 echo "---------------"
-echo "Current SEP:  $SEP"
-echo "Current MODE: $MODE"
-echo "Current READ: $READ"
-echo "Current CAMO: $CAMO"
+echo "Current SEP:    $SEP"
+echo "Current MODE:   $MODE"
+echo "Current READ:   $READ"
+echo "Current CAMO:   $CAMO"
+echo "Current items:  $items"
+echo "Current FILES:  ${FILES[*]}"
