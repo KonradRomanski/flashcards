@@ -33,7 +33,7 @@ for i in "$@"; do
     # echo "  -f, --file        to provide data from files"
     echo "  -s, --separator   to change the separator (by default is ';') It cannot be ' '!"
     echo "  -m, --mode        to change the learning mode - words in the foreign language is shown first (by default the native language is first)"
-    echo "  -r, --read        to make the word be spoken aloud. Languages must be specified!"
+    echo "  -r, --read        to make the word be spoken aloud. default are english and polish. Others can be specified. Use 'h'/'help' option to see avaible options."
     echo "  -c, --camouflage  to hide the word"
     echo "  -o, --order       to change words order"
     echo "                    Avaible options for '-o':"
@@ -66,10 +66,15 @@ for i in "$@"; do
     ;;
 
     -r|--read)
-    LAN1=$2
-    LAN2=$3
+    if [[ $2 != -*  && $2 != '' ]]; then
+      LAN1=$2
+      shi=$(($shi + 1))
+      if [[ $3 != -* && $3 != '' ]]; then
+        LAN2=$3
+        shi=$(($shi + 1))
+      fi
+    fi
     shift
-    shi=$(($shi + 2))
     READ='T'
     ;;
 
@@ -143,6 +148,12 @@ esac
 
 # echo "-------"
 # echo ${FILES[@]}
+
+if [[ $LAN1 == 'h' || $LAN1 == 'help' ]]; then
+  echo "List of avaible languages:"
+  espeak --voice
+  HELP='T'
+fi
 
 if [[ $WP == 'T' && $HELP == 'F' ]]; then
   echo -e "\e[31mWrong parameter.\e[34m Try again or use help flag ('-h'/'--help') for more information.\e[0m"
