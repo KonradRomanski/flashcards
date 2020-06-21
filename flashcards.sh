@@ -11,8 +11,7 @@ PROV='F'
 FILES=[]
 items=0
 shi=0
-LAN1='en'
-LAN2='pl'
+LAN="en pl"
 
 NATIVE=[]
 FOREIGN=[]
@@ -20,96 +19,155 @@ SCORE=0
 FAILS=0
 PERCENTAGE=0
 
-for i in "$@"; do
-  case $i in
-    -h|--help)
-    shift
-    echo "Welcome to help!"
-    echo "Usage (when script in actuall directory): ./flashcards [OPTION]... [FILE]"
-    echo
-    echo "WARNING! Every argument that is not described below is treated as a file"
-    echo
-    echo "  -h, --help        to show this informations"
-    # echo "  -f, --file        to provide data from files"
-    echo "  -s, --separator   to change the separator (by default is ';') It cannot be ' '!"
-    echo "  -m, --mode        to change the learning mode - words in the foreign language is shown first (by default the native language is first)"
-    echo "  -r, --read        to make the word be spoken aloud. default are english and polish. Others can be specified. Use 'h'/'help' option to see avaible options."
-    echo "  -c, --camouflage  to hide the word"
-    echo "  -o, --order       to change words order"
-    echo "                    Avaible options for '-o':"
-    echo "                    'O'/'o' - original order (default)"
-    echo "                    'R'/'r' - random order"
-    echo "                    'A' - ascending order of foreign words"
-    echo "                    'a' - ascending order of native words"
-    echo "                    'D' - descending order of foreign words"
-    echo "                    'd' - descending order of native words"
-    echo
-    echo "Template for every data line: [word in foreign language][separator][word in native language]"
-    echo "Examples: "
-    echo "..."
-    HELP='T'
-    ;;
+function help
+{
+  echo "Welcome to help!"
+  echo "Usage (when script in actuall directory): ./flashcards [OPTION]... [FILE]"
+  echo
+  echo "WARNING! Every argument that is not described below is treated as a file"
+  echo
+  echo "  -h, --help        to show this informations"
+  echo "  -f, --file        to read data from files"
+  echo "  -s, --separator   to change the separator (by default is ';') It cannot be ' '!"
+  echo "  -m, --mode        to change the learning mode - words in the foreign language is shown first (by default the native language is first)"
+  echo "  -r, --read        to make the word be spoken aloud. default are english and polish. Others can be specified. Use 'h'/'help' option to see avaible options."
+  echo "  -c, --camouflage  to hide the word"
+  echo "  -o, --order       to change words order, avaible options:"
+  echo "                    'O'/'o' - original order (default)"
+  echo "                    'R'/'r' - random order"
+  echo "                    'A' - ascending order of foreign words"
+  echo "                    'a' - ascending order of native words"
+  echo "                    'D' - descending order of foreign words"
+  echo "                    'd' - descending order of native words"
+  echo
+  echo "Template for every data line: [word in foreign language][separator][word in native language]"
+  echo "Examples: "
+  echo "..."
+}
 
-    -f|--file)
-    shift
-    ;;
+function usage
+{
+  echo -e "\e[31mWrong parameter.\e[34m Try again or use help flag ('-h'/'--help') for more information.\e[0m"
+}
 
-    -s|--separator)
-    SEP=$2
-    shift
-    shi=$(($shi + 1))
-    ;;
 
-    -m|--mode)
-    shift
-    MODE='T'
-    ;;
+for argument in "$@"; do
+  case "$argument" in
+    "--help")       set -- "$@" "-h" ;;
+    "--file")       set -- "$@" "-f" ;;
+    "--separator")  set -- "$@" "-s" ;;
+    "--mode")       set -- "$@" "-m" ;;
+    "--read")       set -- "$@" "-r" ;;
+    "--camouflage") set -- "$@" "-c" ;;
+    "--order")      set -- "$@" "-o" ;;
+    "--"*)          usage; exit ;;
+  esac
+done
 
-    -r|--read)
-    if [[ $2 != -*  && $2 != '' ]]; then
-      LAN1=$2
-      shi=$(($shi + 1))
-      if [[ $3 != -* && $3 != '' ]]; then
-        LAN2=$3
-        shi=$(($shi + 1))
-      fi
-    fi
-    shift
-    READ='T'
+# OPTIND=1
+while getopts ":hf:s:mr:co:" opt; do
+  case $opt in
+    h) help; exit;;
+    f)
+    FILE=$(${OPTARG})
+    until [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]] || [ -z $(eval "echo \${$OPTIND}") ]; do
+       FILE+=($(eval "echo \${$OPTIND}"))
+       OPTIND=$((OPTIND + 1))
+    done
     ;;
-
-    -c|--camouflage)
-    shift
-    CAMO='T'
+    s) SEP=${OPTARG};;
+    m) MODE='T';;
+    r) LAN=${OPTARG};;
+    c) CAMO='T';;
+    o) ORD=${OPTARG};;
+    :)
+    echo "ERROR: ${OPTARG} requires an argument."
+    exit
     ;;
-
-    -o|--order)
-    ORD=$2
-    shift
-    shi=$(($shi + 1))
-    ;;
-
-    -?*)
-    shift
-    WP='T'
-    ;;
-
-    *)
-    if [[ $shi == 0 ]]; then
-      FILES[items]=$1
-      # echo "*" $items ${FILES[items]} $i
-      shift
-      items=$(($items + 1))
-    else
-      shi=$(($shi - 1))
-      shift
-    fi
-    ;;
-
   esac
   # echo === -$1  $i
 done
+echo ${FILES[@]}
+# shift $(expr $OPTIND - 1)p
 
+# for i in "$@"; do
+#   case $i in
+#     -h)
+#     shift
+#     help
+#     HELP='T'
+#     ;;
+#
+#     -s|--separator)
+#     SEP=$2
+#     shift
+#     shi=$(($shi + 1))
+#     ;;
+#
+#     -m|--mode)
+#     shift
+#     MODE='T'
+#     ;;
+#
+#     -r|--read)
+#     if [[ $2 != -*  && $2 != '' ]]; then
+#       LAN1=$2
+#       shi=$(($shi + 1))
+#       if [[ $3 != -* && $3 != '' ]]; then
+#         LAN2=$3
+#         shi=$(($shi + 1))
+#       fi
+#     fi
+#     shift
+#     READ='T'
+#     ;;
+#
+#     -c|--camouflage)
+#     shift
+#     CAMO='T'
+#     ;;
+#
+#     -o|--order)
+#     ORD=$2
+#     shift
+#     shi=$(($shi + 1))
+#     ;;
+#
+#     -?*)
+#
+#     shift
+#     WP='T'
+#     ;;
+#
+#     *)
+#     if [[ $shi == 0 ]]; then
+#       FILES[items]=$1
+#       # echo "*" $items ${FILES[items]} $i
+#       shift
+#       items=$(($items + 1))
+#     else
+#       shi=$(($shi - 1))
+#       shift
+#     fi
+#     ;;
+#
+#   esac
+#   # echo === -$1  $i
+# done
+
+if [[ $LAN == 'h' || $LAN == 'help' ]]; then
+  echo "List of avaible languages:"
+  espeak --voice
+  exit
+fi
+
+if [[ $(echo $LAN | cut -d ' ' -f1) == $(echo $LAN | cut -d ' ' -f2) ]]; then
+LAN1='en'
+LAN2='pl'
+else
+LAN1=$(echo $LAN | cut -d ' ' -f1)
+LAN2=$(echo $LAN | cut -d ' ' -f2)
+fi
 
 if [[ ${FILES[@]} == '[]' && $HELP == 'F' && $WP == 'F' ]]; then
   PROV='T'
@@ -149,14 +207,9 @@ esac
 # echo "-------"
 # echo ${FILES[@]}
 
-if [[ $LAN1 == 'h' || $LAN1 == 'help' ]]; then
-  echo "List of avaible languages:"
-  espeak --voice
-  HELP='T'
-fi
 
 if [[ $WP == 'T' && $HELP == 'F' ]]; then
-  echo -e "\e[31mWrong parameter.\e[34m Try again or use help flag ('-h'/'--help') for more information.\e[0m"
+  usage;exit
 elif [[ ${FILES[@]} != '[]' && $HELP == 'F' ]]; then
 
 
@@ -178,9 +231,9 @@ elif [[ ${FILES[@]} != '[]' && $HELP == 'F' ]]; then
 
     if [[ $READ == 'T' ]]; then
       if [[ $MODE == 'F' ]]; then
-        espeak -v $LAN2 "${NATIVE[$ff]}"
-      else
         espeak -v $LAN1 "${NATIVE[$ff]}"
+      else
+        espeak -v $LAN2 "${NATIVE[$ff]}"
       fi
     fi
 
@@ -204,14 +257,15 @@ elif [[ ${FILES[@]} != '[]' && $HELP == 'F' ]]; then
   echo -e "\e[34mPercentage of correct answears:\e[0m\e[33;1m $PERCENTAGE %\e[0m"
 
 fi
-# echo "SCRIPT TESTING:"
-# echo "---------------"
-# echo "Current SEP:    $SEP"
-# echo "Current MODE:   $MODE"
-# echo "Current READ:   $READ"
-# echo "Current CAMO:   $CAMO"
-# echo "Current items:  $items"
-# echo "Current HELP:   $HELP"
-# echo "Current FILES:  ${FILES[*]} ${#FILES[*]}"
-# echo "Current NATIVE  ${NATIVE[@]} ${#NATIVE[@]}"
-# echo "Current FOREIGN ${FOREIGN[@]} ${#FOREIGN[@]}"
+echo "SCRIPT TESTING:"
+echo "---------------"
+echo "Current SEP:    $SEP"
+echo "Current MODE:   $MODE"
+echo "Current READ:   $READ"
+echo "Current CAMO:   $CAMO"
+echo "Current items:  $items"
+echo "Current HELP:   $HELP"
+echo "Current FILES:  ${FILES[*]} ${#FILES[*]}"
+echo "Current NATIVE  ${NATIVE[@]} ${#NATIVE[@]}"
+echo "Current FOREIGN ${FOREIGN[@]} ${#FOREIGN[@]}"
+echo "Current LAN     _${LAN[@]}_  _$LAN1 _ _$LAN2 _"
