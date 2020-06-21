@@ -47,7 +47,7 @@ function help
 
 function usage
 {
-  echo -e "\e[31mWrong parameter.\e[34m Try again or use help flag ('-h'/'--help') for more information.\e[0m"
+  echo -e "\e[31mWrong parameter\e[33;1m $1\e[0m\e[34m Try again or use help flag ('-h'/'--help') for more information.\e[0m"
 }
 
 
@@ -60,7 +60,7 @@ for argument in "$@"; do
     "--read")       set -- "$@" "-r" ;;
     "--camouflage") set -- "$@" "-c" ;;
     "--order")      set -- "$@" "-o" ;;
-    "--"*)          usage; exit ;;
+    "--"*)          usage ${argument}; exit ;;
   esac
 done
 
@@ -89,11 +89,11 @@ while getopts ":hf:s:mr:co:" opt; do
     c) CAMO='T';;
     o) ORD=${OPTARG};;
     :)
-    echo "ERROR: ${OPTARG} requires an argument."
+    echo -e "\e[31mERROR:\e[33;1m -${OPTARG}\e[0m\e[34m requires an argument.\e[0m"
     exit
     ;;
     *)
-    echo "ERROR: ${OPTARG} wrong parameter"
+    usage "-${OPTARG}"
     exit
     ;;
   esac
