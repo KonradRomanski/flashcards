@@ -69,25 +69,37 @@ while getopts ":hf:s:mr:co:" opt; do
   case $opt in
     h) help; exit;;
     f)
-    FILE=$(${OPTARG})
+    # echo "opt" $OPTIND
+
+    FILES=${OPTARG}
     until [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]] || [ -z $(eval "echo \${$OPTIND}") ]; do
-       FILE+=($(eval "echo \${$OPTIND}"))
+       FILES+=($(eval "echo \${$OPTIND}"))
        OPTIND=$((OPTIND + 1))
     done
+    # OPTIND=$((OPTIND - 1))
+    # echo "opt" $OPTIND
+
     ;;
     s) SEP=${OPTARG};;
     m) MODE='T';;
-    r) LAN=${OPTARG};;
+    r)
+    LAN=${OPTARG}
+    READ='T'
+    ;;
     c) CAMO='T';;
     o) ORD=${OPTARG};;
     :)
     echo "ERROR: ${OPTARG} requires an argument."
     exit
     ;;
+    *)
+    echo "ERROR: ${OPTARG} wrong parameter"
+    exit
+    ;;
   esac
   # echo === -$1  $i
 done
-echo ${FILES[@]}
+echo "F:" ${FILES[@]}
 # shift $(expr $OPTIND - 1)p
 
 # for i in "$@"; do
@@ -162,8 +174,8 @@ if [[ $LAN == 'h' || $LAN == 'help' ]]; then
 fi
 
 if [[ $(echo $LAN | cut -d ' ' -f1) == $(echo $LAN | cut -d ' ' -f2) ]]; then
-LAN1='en'
-LAN2='pl'
+LAN1='pl'
+LAN2='en'
 else
 LAN1=$(echo $LAN | cut -d ' ' -f1)
 LAN2=$(echo $LAN | cut -d ' ' -f2)
