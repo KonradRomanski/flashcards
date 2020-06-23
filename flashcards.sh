@@ -140,21 +140,11 @@ if [[ $(echo ${FILES[0]} | tr -cd $SEP) != $SEP ]];then
 fi
 
 case $ORD in
-  R|r)
-  FILES=($(echo ${FILES[@]} | tr ' ' '\n' | sort -R | xargs))
-  ;;
-  A)
-  FILES=($(echo ${FILES[@]} | tr ' ' '\n' | sort -t $SEP -k1 | xargs))
-  ;;
-  a)
-  FILES=($(echo ${FILES[@]} | tr ' ' '\n' | sort -t $SEP -k2 | xargs))
-  ;;
-  D)
-  FILES=($(echo ${FILES[@]} | tr ' ' '\n' | sort -t $SEP -rk1 | xargs))
-  ;;
-  d)
-  FILES=($(echo ${FILES[@]} | tr ' ' '\n' | sort -t $SEP -rk2 | xargs))
-  ;;
+  R|r) FILES=($(echo ${FILES[@]} | tr ' ' '\n' | sort -R | xargs)) ;;
+  A)   FILES=($(echo ${FILES[@]} | tr ' ' '\n' | sort -t $SEP -k1 | xargs)) ;;
+  a)   FILES=($(echo ${FILES[@]} | tr ' ' '\n' | sort -t $SEP -k2 | xargs)) ;;
+  D)   FILES=($(echo ${FILES[@]} | tr ' ' '\n' | sort -t $SEP -rk1 | xargs)) ;;
+  d)   FILES=($(echo ${FILES[@]} | tr ' ' '\n' | sort -t $SEP -rk2 | xargs)) ;;
 esac
 
 
