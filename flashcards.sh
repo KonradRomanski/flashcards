@@ -191,7 +191,7 @@ elif [[ ${FILES[@]} != '[]' && $HELP == 'F' ]]; then
     ff=$(($ff + 1))
 
   done
-  PERCENTAGE=$(echo "scale=2;($SCORE / ($SCORE + $FAILS)) * 100" | bc )
+  PERCENTAGE=$(echo "scale=3;($SCORE / ($SCORE + $FAILS)) * 100" | bc )
 
   echo -e "\e[34mYour score:\e[0m\e[33;1m $SCORE / $(($SCORE + $FAILS))\e[0m"
   echo -e "\e[34mYour fails:\e[0m\e[33;1m $FAILS / $(($SCORE + $FAILS))\e[0m"
