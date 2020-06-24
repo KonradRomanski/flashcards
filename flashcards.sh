@@ -30,7 +30,7 @@ function help
   echo "  -f, --file        to read data from files"
   echo "  -s, --separator   to change the separator (by default is ';') It cannot be ' '!"
   echo "  -m, --mode        to change the learning mode - words in the foreign language are shown first (by default the native language is first)"
-  echo "  -r, --read        to make the word be spoken aloud. Language must be specified. Use 'h'/'help' option to see avaible options."
+  echo "  -r, --read        to pronounce the word. Language must be specified. Use 'h'/'help' option to see avaible options."
   echo "  -c, --camouflage  to hide the word"
   echo "  -o, --order       to change words order, avaible options:"
   echo "                     'O'/'o' - original order (default)"
